@@ -1,0 +1,58 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Node / Angular
+/tmp
+/out-tsc
+/bazel-out
+/node_modules
+.npm-cache
+.angular/
+
+# Python
+.venv/
+venv/
+env/
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+build/
+dist/
+wheels/
+*.egg-info
+
+# Profiling
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Misc (build / logs)
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System
+.DS_Store
+Thumbs.db
+
+# Local TEI embedding model files (large)
+docker/embedding/

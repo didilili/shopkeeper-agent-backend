@@ -1,0 +1,67 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: dili123
+      MYSQL_USER: didilili
+      MYSQL_PASSWORD: dili123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+
+  elasticsearch:
+    build: ./elasticsearch
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+  kibana:
+    image: kibana:8.19.10
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  qdrant:
+    image: qdrant/qdrant:v1.16
+    container_name: qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333" # HTTP
+      - "6334:6334" # gRPC
+    volumes:
+      - qdrant_data:/qdrant/storage
+
+  embedding:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-1.8
+    platform: linux/amd64
+    container_name: embedding
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      MODEL_ID: /models/bge-large-zh-v1.5
+      MAX_CONCURRENT_REQUESTS: "16"
+      MAX_BATCH_TOKENS: "16384"
+    volumes:
+      - ./embedding/bge-large-zh-v1.5:/models/bge-large-zh-v1.5
+
+volumes:
+  mysql_data:
+  es_data:
+  qdrant_data:
