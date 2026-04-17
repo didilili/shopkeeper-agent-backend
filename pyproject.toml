@@ -21,3 +21,16 @@ dependencies = [
     "qdrant-client>=1.17.1",
     "sqlalchemy>=2.0.49",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "ruff>=0.11.0",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

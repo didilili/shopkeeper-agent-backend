@@ -85,7 +85,7 @@ class AppConfig:
 
 # 从当前文件 app/conf/app_config.py 出发，回到项目根目录
 # 再定位到 conf/app_config.yaml 这个配置文件
-config_file = Path(__file__).parents[2] / 'conf' / 'app_config.yaml'
+config_file = Path(__file__).parents[2] / "conf" / "app_config.yaml"
 
 # 读取 YAML 配置内容
 context = OmegaConf.load(config_file)
@@ -96,6 +96,6 @@ schema = OmegaConf.structured(AppConfig)
 # 把“配置结构”和“配置值”合并，再转换成真正可直接访问属性的对象
 app_config: AppConfig = OmegaConf.to_object(OmegaConf.merge(schema, context))
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 简单测试：验证配置是否能正常读取
     print(app_config.es.host)
