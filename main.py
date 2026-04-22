@@ -7,6 +7,7 @@
 
 
 def main():
+    """执行项目默认占位入口"""
     print("Hello from shopkeeper-agent-backend!")
 
 

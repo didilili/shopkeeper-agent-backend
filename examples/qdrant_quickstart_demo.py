@@ -1,5 +1,7 @@
 """
 Qdrant 快速入门示例
+
+演示最小化的集合创建、向量写入和相似度查询流程，便于理解 Qdrant 的基本数据模型
 """
 
 import asyncio
@@ -12,7 +14,7 @@ VECTOR_SIZE = 4
 
 
 async def recreate_collection(client):
-    """为了让示例可重复运行，先删除旧集合，再重新创建"""
+    """删除旧集合并重新创建，确保示例可以重复运行"""
     if await client.collection_exists(COLLECTION_NAME):
         await client.delete_collection(COLLECTION_NAME)
 
@@ -81,7 +83,7 @@ async def run_query(client):
 
 
 async def main():
-    # 直接初始化客户端，方便单独学习 quickstart 的基本用法
+    """直接初始化客户端 串联整个 quickstart 示例"""
     client = AsyncQdrantClient(url=QDRANT_URL)
 
     try:

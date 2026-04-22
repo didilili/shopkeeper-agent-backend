@@ -1,9 +1,8 @@
 """
-Embedding 客户端管理模块
+Embedding 客户端管理器
 
-统一创建和持有项目中的 Embedding 客户端
-当前通过配置中的 host 和 port 连接已启动好的 TEI 服务
-后续字段说明 指标说明 和用户问题的向量化都会通过这里提供的客户端完成
+负责按配置初始化 Embedding 服务客户端，并为字段、指标和用户问题的向量化
+提供统一访问入口
 """
 
 import asyncio
@@ -15,36 +14,33 @@ from app.conf.app_config import EmbeddingConfig, app_config
 
 
 class EmbeddingClientManager:
+    """管理 Embedding 服务客户端的初始化与复用"""
+
     def __init__(self, config: EmbeddingConfig):
-        # 客户端在模块导入阶段先不立即创建，避免启动时就发起外部依赖连接
         self.client: Optional[HuggingFaceEndpointEmbeddings] = None
-        # 保存 Embedding 服务配置，供 init() 时组装服务访问地址使用
         self.config = config
 
-    def _get_url(self):
-        # 当前项目通过 host + port 访问外部已启动的 Embedding 推理服务
+    def _get_url(self) -> str:
+        """拼接 Embedding 服务地址"""
         return f"http://{self.config.host}:{self.config.port}"
 
     def init(self):
-        # 在应用启动阶段显式调用，完成真正的客户端初始化
+        """显式初始化客户端，避免模块导入时立即建立外部连接"""
         self.client = HuggingFaceEndpointEmbeddings(model=self._get_url())
 
 
-# 模块级单例，供其他模块按需复用同一个客户端管理器
+# 模块级单例，供整个项目复用同一套 Embedding 客户端管理器
 embedding_client_manager = EmbeddingClientManager(app_config.embedding)
 
 
 if __name__ == "__main__":
-    # 本地调试入口：初始化客户端后执行一次最小化向量化调用
     embedding_client_manager.init()
     client = embedding_client_manager.client
 
     async def test():
-        # 使用示例文本验证 Embedding 服务是否可正常响应
+        """执行一次最小化向量化调用，验证服务是否可用"""
         text = "What is deep learning?"
         query_result = await client.aembed_query(text)
-        # 只打印前 3 个维度，便于快速确认返回结果结构正确
         print(query_result[:3])
 
-    # 运行调试测试
     asyncio.run(test())

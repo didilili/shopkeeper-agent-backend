@@ -1,10 +1,10 @@
 """
-元数据知识构建服务模块
+元数据知识构建服务
 
-负责组织元数据知识库构建的核心业务流程，位于脚本入口和仓储层之间，
-一方面接收配置文件，另一方面协调元数据库和数仓查询仓储。
-当前实现先保留配置加载与总编排骨架，具体的表字段入库、向量索引、
-全文索引和指标构建逻辑后续再逐步补充。
+负责组织元数据知识库构建的核心业务流程，位于脚本入口和仓储层之间
+一方面接收配置文件，另一方面协调元数据库和数仓查询仓储
+
+向量索引，全文索引和指标构建逻辑后续再逐步补充
 """
 
 from pathlib import Path
@@ -20,6 +20,8 @@ from app.repositories.mysql.meta.meta_mysql_repository import MetaMySQLRepositor
 
 
 class MetaKnowledgeService:
+    """负责串联元数据知识库构建流程的应用服务"""
+
     def __init__(
         self,
         meta_mysql_repository: MetaMySQLRepository,
@@ -31,13 +33,12 @@ class MetaKnowledgeService:
         self.dw_mysql_repository: DWMySQLRepository = dw_mysql_repository
 
     async def build(self, config_path: Path):
-        # 1. 读取配置文件并转换成结构化配置对象
-        #    后续流程统一围绕 MetaConfig 展开
+        """读取配置并按配置内容触发对应的元数据构建链路"""
         context = OmegaConf.load(config_path)
         schema = OmegaConf.structured(MetaConfig)
         meta_config: MetaConfig = OmegaConf.to_object(OmegaConf.merge(schema, context))
 
-        # 2. 根据配置文件判断后续要进入哪条构建链路
+        # 根据配置文件判断后续要进入哪条构建链路
         if meta_config.tables:
             table_infos: list[TableInfo] = []
             column_infos: list[ColumnInfo] = []
@@ -71,8 +72,8 @@ class MetaKnowledgeService:
                     table_id=table.name,
                 )
                 column_infos.append(column_info)
-                # self.meta_mysql_repository.add(table_info)
 
+        # 保存表信息和字段信息到元数据数据库
         async with self.meta_mysql_repository.session.begin():
             self.meta_mysql_repository.save_table_infos(table_infos)
             self.meta_mysql_repository.save_column_infos(column_infos)

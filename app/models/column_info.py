@@ -1,8 +1,8 @@
 """
-column_info ORM 模型模块
+`column_info` ORM 模型
 
-定义元数据库中 column_info 表对应的 ORM 模型，
-它负责保存字段级元数据，包括字段类型 字段角色 示例值 说明 别名 以及所属表
+定义元数据库中 column_info 表对应的 ORM 模型
+保存字段级元数据，包括字段类型 字段角色 示例值 说明 别名 以及所属表
 """
 
 from sqlalchemy import String, Text
@@ -13,7 +13,8 @@ from app.models.base import Base
 
 
 class ColumnInfoMySQL(Base):
-    # 对应元数据库中的 column_info 表
+    """字段元数据表对应的 ORM 模型"""
+
     __tablename__ = "column_info"
 
     # id 采用 表名.字段名 的组合形式
