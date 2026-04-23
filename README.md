@@ -1,5 +1,5 @@
 <div align='center'>
-  <h1 style="margin-top: 15px;">🚀 掌柜问数</h1>
+  <h1 style="margin-top: 15px;">「掌柜问数」智能数据分析 Agent</h1>
   <h4><b>shopkeeper-agent</b></h4>
   <p><em>一套真正能落地的企业级智能问数 Agent，配套系统性文字教程与对应章节分支，带你打通混合检索、多阶段推理、SQL 生成与执行全链路</em></p>
 </div>
@@ -22,8 +22,9 @@
 
 它不仅是一个“SQL 生成工具”，更接近一个会思考、会检索、会校验、会逐步推理的虚拟数据分析师。
 
-> 本套仓库是 [ai-agents-from-zero](https://github.com/didilili/ai-agents-from-zero) 教程体系中的 [`实战项目-掌柜问数`](https://github.com/didilili/ai-agents-from-zero/tree/main/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0) 配套源码仓库，除了可直接运行和二次开发的项目代码之外，也提供了与教程章节对应的 Git 分支演进过程，以及完整的在线图文讲义入口。
-> 如果你想系统学习「AI智能体 大模型应用开发」，也可直接从系统教程 [AI 智能体实战速成指南](https://didilili.github.io/ai-agents-from-zero/#/) 开始。
+> 本套仓库是 [ai-agents-from-zero](https://github.com/didilili/ai-agents-from-zero) 教程体系中的 [实战项目-掌柜问数](https://github.com/didilili/ai-agents-from-zero/tree/main/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0) 配套源码仓库，除了可直接运行和二次开发的项目代码之外，也提供了与教程章节对应的 Git 分支演进过程，以及完整的在线图文讲义入口。
+> 配套教程覆盖项目定位、技术架构、Agent 工作流与工程实践，适合结合章节分支一边阅读一边对照源码学习。
+> 如果你想系统学习「AI智能体 大模型应用开发」，也可直接从系统教程 [AI 智能体实战速成指南-大模型入门](https://didilili.github.io/ai-agents-from-zero/#/) 开始。
 
 ## 📖 项目介绍
 
@@ -83,7 +84,7 @@
 | 3    | [开发环境与基础服务准备](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/3-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%8E%E5%9F%BA%E7%A1%80%E6%9C%8D%E5%8A%A1%E5%87%86%E5%A4%87)                       | 介绍 `uv`、Docker Compose、MySQL、Qdrant、Elasticsearch、Kibana 和 Embedding 服务的本地准备方式 | `03-env-services`               |
 | 4    | [项目结构与基础服务配置管理](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/4-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E5%9F%BA%E7%A1%80%E6%9C%8D%E5%8A%A1%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86) | 说明 `app` 分层结构、YAML 配置组织、`OmegaConf + dataclass` 的配置加载方案                      | `04-structure-config`           |
 | 5    | [Qdrant 与 ES 快速入门与接入](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/5-Qdrant%E4%B8%8EES%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%E4%B8%8E%E6%8E%A5%E5%85%A5)                                     | 讲清向量检索与全文检索的职责边界，以及 `QdrantClientManager` 和 `ESClientManager` 的接入实现    | `05-qdrant-es`                  |
-| 6    | [MySQL、Embedding 与日志管理](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/6-MySQL%E3%80%81Embedding%E4%B8%8E%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86)                                                 | 介绍异步 MySQL 访问、TEI Embedding 接入，以及 `Loguru + request_id` 的日志链路设计              | `06-mysql-embedding-log`        |
+| 6    | [MySQL、Embedding 接入与日志管理](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/6-MySQL%E3%80%81Embedding%E4%B8%8E%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86)                                             | 介绍异步 MySQL 访问、TEI Embedding 接入，以及 `Loguru + request_id` 的日志链路设计              | `06-mysql-embedding-log`        |
 | 7    | [元数据知识库总览与构建入口](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/7-%E5%85%83%E6%95%B0%E6%8D%AE%E7%9F%A5%E8%AF%86%E5%BA%93%E6%80%BB%E8%A7%88%E4%B8%8E%E6%9E%84%E5%BB%BA%E5%85%A5%E5%8F%A3) | 总览元数据知识库的产物、存储分工，以及构建脚本如何通过配置驱动整条链路                          | `07-metadata-base-overview`     |
 | 8    | [表与字段信息同步到元数据库](https://didilili.github.io/ai-agents-from-zero/#/%E5%AE%9E%E6%88%98%E9%A1%B9%E7%9B%AE-%E6%8E%8C%E6%9F%9C%E9%97%AE%E6%95%B0/8-%E8%A1%A8%E4%B8%8E%E5%AD%97%E6%AE%B5%E4%BF%A1%E6%81%AF%E5%90%8C%E6%AD%A5%E5%88%B0%E5%85%83%E6%95%B0%E6%8D%AE%E5%BA%93) | 聚焦 `Service + Repository + Mapper + ORM` 如何配合完成表字段元数据入库                         | `08-metadata-table-column-sync` |
 
