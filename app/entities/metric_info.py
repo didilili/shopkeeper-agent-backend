@@ -1,8 +1,8 @@
 """
 指标元数据业务实体
 
-本章主线暂未深入到指标链路，但指标实体沿用了与表、字段一致的业务对象
-表达方式，方便后续扩展到指标入库和检索
+用于表达一个业务指标的名称 说明 别名以及它依赖的底层字段
+后续写入 Meta MySQL 和 Qdrant 时都会复用这份统一的业务对象
 """
 
 from dataclasses import dataclass
@@ -15,5 +15,6 @@ class MetricInfo:
     id: str
     name: str
     description: str
+    # 指标依赖的底层字段列表，例如 GMV 依赖 fact_order.order_amount
     relevant_columns: list[str]
     alias: list[str]
