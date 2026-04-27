@@ -1657,7 +1657,7 @@ wheels = [
 ]
 
 [[package]]
-name = "shopkeeper-agent-backend"
+name = "shopkeeper-agent"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
