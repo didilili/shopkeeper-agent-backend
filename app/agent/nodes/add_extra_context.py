@@ -1,23 +1,37 @@
 """
-额外上下文补充节点
+额外上下文补全节点
 
-负责在生成 SQL 前整理完整提示词上下文
-例如候选表结构 字段说明 指标口径 取值映射以及必要的业务规则
+负责在 SQL 生成前补齐不来自召回结果、但模型必须知道的运行环境信息
+当前包括日期信息和数据库方言/版本，后续可继续扩展权限、租户、时区等上下文
 """
+
+from datetime import date
 
 from langgraph.runtime import Runtime
 
 from app.agent.context import DataAgentContext
-from app.agent.state import DataAgentState
+from app.agent.state import DataAgentState, DateInfoState, DBInfoState
+from app.core.log import logger
 
 
 async def add_extra_context(state: DataAgentState, runtime: Runtime[DataAgentContext]):
-    """补齐生成 SQL 所需的上下文信息"""
+    """补齐 SQL 生成所需的日期和数据库环境信息"""
 
     writer = runtime.stream_writer
-    # 这里是过滤结果汇合点，后续会把结构化上下文写回 state
     writer("添加额外上下文")
-    import asyncio
 
-    # 当前章节先保留占位逻辑，后续会组装表字段 指标和取值上下文
-    await asyncio.sleep(0.5)
+    dw_mysql_repository = runtime.context["dw_mysql_repository"]
+
+    # 当前日期信息会帮助模型处理“今天 本月 本季度 最近 N 天”等相对时间表达
+    today = date.today()
+    date_str = today.strftime("%Y-%m-%d")
+    weekday = today.strftime("%A")
+    quarter = f"Q{(today.month - 1) // 3 + 1}"
+    date_info = DateInfoState(date=date_str, weekday=weekday, quarter=quarter)
+
+    # 数据库方言和版本会影响函数名 日期运算 limit 语法等 SQL 细节
+    db = await dw_mysql_repository.get_db_info()
+    db_info = DBInfoState(**db)
+    logger.info(f"数据库信息：{db_info}")
+    logger.info(f"日期信息：{date_info}")
+    return {"date_info": date_info, "db_info": db_info}

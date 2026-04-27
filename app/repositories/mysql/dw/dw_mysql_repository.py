@@ -32,3 +32,14 @@ class DWMySQLRepository:
         sql = f"select distinct {column_name} from {table_name} limit {limit}"
         result = await self.session.execute(text(sql))
         return [row[0] for row in result.fetchall()]
+
+    async def get_db_info(self):
+        """读取当前数仓数据库的方言和版本，供 SQL 生成提示词使用"""
+
+        sql = "select version()"
+        result = await self.session.execute(text(sql))
+        version = result.scalar()
+
+        # dialect 来自 SQLAlchemy 当前绑定的数据库方言，例如 mysql
+        dialect = self.session.bind.dialect.name
+        return {"dialect": dialect, "version": version}

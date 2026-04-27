@@ -44,6 +44,21 @@ class TableInfoState(TypedDict):
     columns: list[ColumnInfoState]
 
 
+class DateInfoState(TypedDict):
+    """SQL 生成阶段使用的当前日期上下文"""
+
+    date: str
+    weekday: str
+    quarter: str
+
+
+class DBInfoState(TypedDict):
+    """SQL 生成阶段使用的数据库环境信息"""
+
+    dialect: str
+    version: str
+
+
 class DataAgentState(TypedDict):
     """一次问数链路中的核心状态"""
 
@@ -55,5 +70,7 @@ class DataAgentState(TypedDict):
 
     table_infos: list[TableInfoState]  # 合并和补齐后的表结构上下文
     metric_infos: list[MetricInfoState]  # 合并后的指标上下文
+    date_info: DateInfoState  # 当前日期 星期和季度信息
+    db_info: DBInfoState  # 数据库方言和版本信息
 
     error: str  # 校验SQL时出现的错误信息
