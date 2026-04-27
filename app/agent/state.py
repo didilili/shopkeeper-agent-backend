@@ -4,6 +4,7 @@
 State 是 LangGraph 各节点之间传递和更新的共享数据
 本章在用户原始问题之外，新增关键词列表和三路召回结果
 并把召回到的实体整理成后续提示词更容易消费的表信息和指标信息
+SQL 生成闭环会继续写入候选 SQL 以及校验错误信息，用于控制校正或执行分支
 """
 
 from typing import TypedDict
@@ -72,5 +73,7 @@ class DataAgentState(TypedDict):
     metric_infos: list[MetricInfoState]  # 合并后的指标上下文
     date_info: DateInfoState  # 当前日期 星期和季度信息
     db_info: DBInfoState  # 数据库方言和版本信息
+
+    sql: str  # 生成或校正后的SQL
 
     error: str  # 校验SQL时出现的错误信息

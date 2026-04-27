@@ -1,23 +1,69 @@
 """
 SQL 修正节点
 
-负责根据校验错误对 SQL 进行修正
+负责在 SQL 校验失败后，结合原问题 原 SQL 数据库错误和完整上下文做最小必要修正
 只有 validate_sql 写入错误信息时，LangGraph 才会进入这个分支
 """
 
+import yaml
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import PromptTemplate
 from langgraph.runtime import Runtime
 
 from app.agent.context import DataAgentContext
+from app.agent.llm import llm
 from app.agent.state import DataAgentState
+from app.core.log import logger
+from app.prompt.prompt_loader import load_prompt
 
 
 async def correct_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
     """根据校验错误修正 SQL"""
 
     writer = runtime.stream_writer
-    # 后续真实实现会读取 state["error"] 和原 SQL，再调用 LLM 生成修正版 SQL
     writer("校正SQL")
-    import asyncio
 
-    # 当前章节先保留占位逻辑，后续接入 SQL 修正提示词
-    await asyncio.sleep(0.5)
+    # 校正 SQL 仍然需要完整上下文，避免模型只根据报错修语法却改丢业务语义
+    table_infos = state["table_infos"]
+    metric_infos = state["metric_infos"]
+    date_info = state["date_info"]
+    db_info = state["db_info"]
+    query = state["query"]
+
+    # sql 是待修正的候选 SQL，error 是数据库 explain 返回的具体错误信息
+    sql = state["sql"]
+    error = state["error"]
+
+    prompt = PromptTemplate(
+        template=load_prompt("correct_sql"),
+        input_variables=[
+            "table_infos",
+            "metric_infos",
+            "date_info",
+            "db_info",
+            "query",
+            "sql",
+            "error",
+        ],
+    )
+    # 修正后的输出仍然是一条纯 SQL 文本，用来覆盖 state["sql"]
+    output_parser = StrOutputParser()
+    chain = prompt | llm | output_parser
+
+    result = await chain.ainvoke(
+        {
+            # 与生成节点保持一致，用 YAML 向模型提供稳定 可读的结构化上下文
+            "table_infos": yaml.dump(table_infos, allow_unicode=True, sort_keys=False),
+            "metric_infos": yaml.dump(
+                metric_infos, allow_unicode=True, sort_keys=False
+            ),
+            "date_info": yaml.dump(date_info, allow_unicode=True, sort_keys=False),
+            "db_info": yaml.dump(db_info, allow_unicode=True, sort_keys=False),
+            "query": query,
+            "sql": sql,
+            "error": error,
+        }
+    )
+
+    logger.info(f"校正后的SQL：{result}")
+    return {"sql": result}
