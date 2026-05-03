@@ -6,13 +6,26 @@ FastAPI 应用入口
 具体的接口处理函数。
 """
 
-from fastapi import FastAPI
+import uuid
+
+from fastapi import FastAPI, Request
 
 from app.api.lifespan import lifespan
 from app.api.routers.query_router import query_router
+from app.core.context import request_id_ctx_var
 
 # lifespan 交给 FastAPI 管理，用于在服务启动和关闭时统一初始化与释放外部客户端
 app = FastAPI(lifespan=lifespan)
 
 # 把查询路由注册进应用；没有挂载时，/docs 和真实 HTTP 请求都访问不到该接口
 app.include_router(query_router)
+
+
+@app.middleware("http")
+async def add_request_id(request: Request, call_next):
+    # 请求被处理之前
+    request_id = uuid.uuid4()
+    request_id_ctx_var.set(request_id)
+    response = await call_next(request)
+    # 请求被处理之后
+    return response

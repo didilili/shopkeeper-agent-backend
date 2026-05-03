@@ -16,13 +16,21 @@ async def run_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
     """执行 SQL 并产出最终问数结果"""
 
     writer = runtime.stream_writer
-    writer("执行SQL")
+    step = "执行SQL"
+    writer({"type": "progress", "step": step, "status": "running"})
 
-    # 这里拿到的可能是 generate_sql 直接通过校验的 SQL，也可能是 correct_sql 覆盖后的 SQL
-    sql = state["sql"]
-    dw_mysql_repository = runtime.context["dw_mysql_repository"]
+    try:
+        # 这里拿到的可能是 generate_sql 直接通过校验的 SQL，也可能是 correct_sql 覆盖后的 SQL
+        sql = state["sql"]
+        dw_mysql_repository = runtime.context["dw_mysql_repository"]
 
-    # 真实数据库访问统一封装在仓储层，节点只负责从状态取 SQL 并触发执行
-    result = await dw_mysql_repository.run(sql)
+        # 真实数据库访问统一封装在仓储层，节点只负责从状态取 SQL 并触发执行
+        result = await dw_mysql_repository.run(sql)
+        logger.info(f"SQL执行结果：{result}")
+        writer({"type": "progress", "step": step, "status": "success"})
+        writer({"type": "result", "data": result})
 
-    logger.info(f"SQL执行结果：{result}")
+    except Exception as e:
+        logger.error(f"{step} failed: {e}")
+        writer({"type": "progress", "step": step, "status": "error"})
+        raise
