@@ -1,0 +1,6 @@
+# 前端项目忽略规则
+# 避免提交依赖、构建产物和本地环境文件。
+node_modules/
+dist/
+*.tsbuildinfo
+.env

@@ -1,0 +1,62 @@
+/**
+ * 全局样式入口
+ * 加载 Tailwind 层并定义页面基础样式与背景纹理
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    color-scheme: light;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: #f7f1e8;
+    overflow: hidden;
+}
+
+button,
+textarea {
+    font: inherit;
+}
+
+::selection {
+    background: rgba(47, 107, 79, 0.2);
+}
+
+.grain {
+    opacity: 0.32;
+    background-image: radial-gradient(
+        circle at 1px 1px,
+        rgba(32, 32, 29, 0.18) 1px,
+        transparent 0
+    );
+    background-size: 18px 18px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent 72%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

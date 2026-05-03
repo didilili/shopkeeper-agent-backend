@@ -1,0 +1,17 @@
+/**
+ * Node 侧 TypeScript 配置
+ * 主要服务于 Vite 配置文件的类型检查
+ */
+{
+    "compilerOptions": {
+        "composite": true,
+        "skipLibCheck": true,
+        "target": "ES2022",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "types": ["node"]
+    },
+    "include": ["vite.config.ts"]
+}

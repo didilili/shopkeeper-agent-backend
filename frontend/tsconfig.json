@@ -1,0 +1,11 @@
+/**
+ * TypeScript 工程引用入口
+ * 聚合应用代码和 Vite 配置的独立编译设置
+ */
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
